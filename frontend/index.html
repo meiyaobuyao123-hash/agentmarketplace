@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>万象 · Marketplace</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500&family=Noto+Sans+SC:wght@200;300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg: #0A0910;
+    --bg-2: #11101A;
+    --ink: #E8E4D8;
+    --ink-70: rgba(232,228,216,0.72);
+    --ink-40: rgba(232,228,216,0.44);
+    --ink-20: rgba(232,228,216,0.18);
+    --line: rgba(232,228,216,0.10);
+    --line-strong: rgba(232,228,216,0.24);
+    --live: #E26B8C;
+    --warn: #E8946A;
+    --c-cyan:    #6E96B8;
+    --c-magenta: #E26B8C;
+    --c-amber:   #E8946A;
+    --c-violet:  #8B7FE8;
+    --c-emerald: #7AAE8C;
+    --c-rose:    #D67A7A;
+    --grad-1: #8B7FE8;
+    --grad-2: #E26B8C;
+    --grad-3: #E8946A;
+    --f-sans: "Noto Sans SC", -apple-system, "Helvetica Neue", system-ui, sans-serif;
+    --f-serif: "Noto Serif SC", "Cormorant Garamond", Georgia, serif;
+    --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body, #root { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--f-sans);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    position: relative;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 18% 110%, rgba(139,127,232,0.18), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 82% 105%, rgba(226,107,140,0.14), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 50% 115%, rgba(232,148,106,0.10), transparent 60%),
+      radial-gradient(circle 1px at 12% 18%, rgba(232,228,216,0.55), transparent 1.5px),
+      radial-gradient(circle 1px at 78% 38%, rgba(232,228,216,0.40), transparent 1.5px),
+      radial-gradient(circle 1px at 32% 72%, rgba(232,228,216,0.45), transparent 1.5px),
+      radial-gradient(circle 1px at 88% 22%, rgba(232,228,216,0.35), transparent 1.5px),
+      radial-gradient(circle 1px at 22% 88%, rgba(232,228,216,0.40), transparent 1.5px);
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      linear-gradient(rgba(232,228,216,0.025) 1px, transparent 1px) 0 0 / 100% 88px,
+      linear-gradient(90deg, rgba(232,228,216,0.025) 1px, transparent 1px) 0 0 / 88px 100%,
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 3px);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 95%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 95%);
+  }
+  #root { position: relative; z-index: 1; }
+  button { background: none; border: none; color: inherit; cursor: pointer; font: inherit; }
+  input, kbd { font-family: inherit; }
+  .zh { font-family: var(--f-sans); }
+  .serif { font-family: var(--f-serif); font-style: italic; font-weight: 400; }
+  .cap {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-70);
+  }
+  .cap.s { font-size: 9px; opacity: 0.8; }
+  .dim { color: var(--ink-40) !important; }
+  .hr { height: 1px; background: var(--line); width: 100%; }
+
+  .dot-live {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--live);
+    box-shadow: 0 0 0 0 var(--live);
+    animation: dotPulse 2s ease-out infinite;
+  }
+  @keyframes dotPulse {
+    0% { box-shadow: 0 0 0 0 rgba(111,227,240,0.5); }
+    70% { box-shadow: 0 0 0 6px rgba(111,227,240,0); }
+    100% { box-shadow: 0 0 0 0 rgba(111,227,240,0); }
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 0; }
+  ::selection { background: var(--ink); color: var(--bg-2); }
+
+  /* Constellation cursor game */
+  #__game {
+    position: fixed; inset: 0; pointer-events: none; z-index: 2;
+    mix-blend-mode: screen;
+  }
+  .game-hud {
+    position: fixed; right: 24px; bottom: 24px; z-index: 3;
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 16px;
+    background: rgba(232,228,216,0.04);
+    border: 1px solid rgba(232,228,216,0.10);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--ink-70);
+    pointer-events: none;
+    user-select: none;
+  }
+  .game-hud .gh-key {
+    color: var(--ink-40);
+    text-transform: uppercase;
+  }
+  .game-hud .gh-num {
+    color: var(--ink);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .game-hud .gh-grad {
+    background: linear-gradient(95deg, #8B7FE8, #E26B8C, #E8946A);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .game-hud .gh-bar {
+    width: 80px; height: 2px;
+    background: rgba(232,228,216,0.10);
+    overflow: hidden; position: relative;
+  }
+  .game-hud .gh-bar > i {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, #8B7FE8, #E26B8C, #E8946A);
+    width: 0%;
+    transition: width 0.5s cubic-bezier(.2,.8,.2,1);
+  }
+  .game-hud .gh-tip {
+    position: absolute; right: 0; bottom: 100%; margin-bottom: 8px;
+    color: var(--ink-40);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.6s ease;
+  }
+  .game-hud.engaged .gh-tip { opacity: 0; }
+  @media (hover: none) {
+    #__game, .game-hud { display: none; }
+  }
+  [data-mouse-tilt] { transition: transform 0.4s cubic-bezier(.2,.8,.2,1); transform-style: preserve-3d; }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <canvas id="__game"></canvas>
+  <div class="game-hud" id="__game_hud">
+    <span class="gh-tip">点击星点 · 链接所有节点</span>
+    <span class="gh-key">Constellation</span>
+    <span class="gh-bar"><i id="__gh_fill"></i></span>
+    <span><span class="gh-num gh-grad" id="__gh_lit">0</span><span class="gh-key"> / </span><span class="gh-num" id="__gh_total">144</span></span>
+  </div>
+  <script>
+    (function(){
+      var canvas = document.getElementById('__game');
+      var hud = document.getElementById('__game_hud');
+      var hudFill = document.getElementById('__gh_fill');
+      var hudLit  = document.getElementById('__gh_lit');
+      var hudTotal= document.getElementById('__gh_total');
+      var ctx = canvas.getContext('2d');
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var W = 0, H = 0;
+      var STAR_N = 144;
+      var stars = [];
+      var bursts = [];
+      var tx = window.innerWidth/2, ty = window.innerHeight/2;
+      var mx = tx, my = ty;
+      var lit = 0;
+      var hueA = [139,127,232], hueB = [226,107,140], hueC = [232,148,106];
+
+      function resize(){
+        W = window.innerWidth; H = window.innerHeight;
+        canvas.width = W * dpr; canvas.height = H * dpr;
+        canvas.style.width = W+'px'; canvas.style.height = H+'px';
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+      }
+      function seed(){
+        stars.length = 0;
+        for (var i=0;i<STAR_N;i++){
+          stars.push({
+            x: Math.random()*W,
+            y: Math.random()*H,
+            r: 0.6 + Math.random()*1.4,
+            tw: Math.random()*Math.PI*2,
+            ig: 0,            // 0 → 1 ignition phase
+            on: false,
+            h: Math.random()  // hue mix factor 0..1
+          });
+        }
+      }
+      resize(); seed();
+      window.addEventListener('resize', function(){ resize(); seed(); lit = 0; updateHud(); });
+
+      function updateHud(){
+        hudLit.textContent = lit;
+        hudTotal.textContent = STAR_N;
+        hudFill.style.width = (100 * lit / STAR_N) + '%';
+        if (lit > 0) hud.classList.add('engaged');
+      }
+      updateHud();
+
+      function colorAt(t, a){
+        // t: 0..1 across A→B→C
+        var p1, p2, k;
+        if (t < 0.5){ p1 = hueA; p2 = hueB; k = t*2; }
+        else { p1 = hueB; p2 = hueC; k = (t-0.5)*2; }
+        var r = p1[0]+(p2[0]-p1[0])*k;
+        var g = p1[1]+(p2[1]-p1[1])*k;
+        var b = p1[2]+(p2[2]-p1[2])*k;
+        return 'rgba('+(r|0)+','+(g|0)+','+(b|0)+','+a+')';
+      }
+
+      window.addEventListener('mousemove', function(e){
+        tx = e.clientX; ty = e.clientY;
+      }, { passive: true });
+
+      window.addEventListener('click', function(e){
+        var bx = e.clientX, by = e.clientY;
+        var closest = null, minD = 70;
+        for (var i=0;i<stars.length;i++){
+          var s = stars[i];
+          if (s.on) continue;
+          var d = Math.hypot(s.x - bx, s.y - by);
+          if (d < minD){ minD = d; closest = s; }
+        }
+        if (closest){
+          closest.on = true;
+          closest.ig = 0;
+          lit++; updateHud();
+          // burst particles
+          for (var k=0;k<14;k++){
+            var ang = Math.random()*Math.PI*2;
+            var sp  = 1 + Math.random()*3.2;
+            bursts.push({
+              x: closest.x, y: closest.y,
+              vx: Math.cos(ang)*sp, vy: Math.sin(ang)*sp,
+              t: 0, life: 50 + Math.random()*30,
+              h: closest.h
+            });
+          }
+          // shockwave ring
+          bursts.push({ ring:true, x: closest.x, y: closest.y, t:0, life: 36, h: closest.h });
+          if (lit >= STAR_N){
+            setTimeout(function(){ for (var i=0;i<stars.length;i++){ stars[i].on=false; stars[i].ig=0; } lit=0; updateHud(); }, 1400);
+          }
+        }
+      });
+
+      function draw(){
+        mx += (tx - mx) * 0.18;
+        my += (ty - my) * 0.18;
+
+        ctx.clearRect(0,0,W,H);
+
+        // 1. Cursor → nearby stars: web of links
+        var RAD = 220;
+        ctx.lineWidth = 1;
+        for (var i=0;i<stars.length;i++){
+          var s = stars[i];
+          var d = Math.hypot(s.x - mx, s.y - my);
+          if (d < RAD){
+            var a = (1 - d/RAD);
+            // gradient line: shift hue with star.h so each link reads a different shade
+            ctx.strokeStyle = colorAt(s.h, a*0.55);
+            ctx.beginPath();
+            ctx.moveTo(mx, my);
+            ctx.lineTo(s.x, s.y);
+            ctx.stroke();
+          }
+        }
+
+        // 2. Star ↔ star (only between lit stars, gives a "completed network" feeling)
+        for (var i=0;i<stars.length;i++){
+          if (!stars[i].on) continue;
+          for (var j=i+1;j<stars.length;j++){
+            if (!stars[j].on) continue;
+            var dd = Math.hypot(stars[i].x - stars[j].x, stars[i].y - stars[j].y);
+            if (dd < 180){
+              var aa = (1 - dd/180) * 0.30;
+              ctx.strokeStyle = colorAt((stars[i].h+stars[j].h)/2, aa);
+              ctx.beginPath();
+              ctx.moveTo(stars[i].x, stars[i].y);
+              ctx.lineTo(stars[j].x, stars[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        // 3. Stars
+        for (var i=0;i<stars.length;i++){
+          var s = stars[i];
+          s.tw += 0.02 + s.h*0.01;
+          var d = Math.hypot(s.x - mx, s.y - my);
+          var hover = Math.max(0, 1 - d/RAD);
+          if (s.on){ s.ig = Math.min(1, s.ig + 0.06); }
+          var baseA = 0.20 + 0.18*Math.sin(s.tw) + hover*0.55;
+          var rad = s.r + hover*1.1 + s.ig*1.4;
+
+          // glow halo for lit / hovered
+          if (s.on || hover > 0.35){
+            var gA = (s.on ? 0.32 : hover*0.30) * (0.5 + s.ig*0.5);
+            var grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, 14 + s.ig*10);
+            grd.addColorStop(0, colorAt(s.h, gA));
+            grd.addColorStop(1, colorAt(s.h, 0));
+            ctx.fillStyle = grd;
+            ctx.beginPath(); ctx.arc(s.x, s.y, 14 + s.ig*10, 0, Math.PI*2); ctx.fill();
+          }
+
+          ctx.fillStyle = s.on ? colorAt(s.h, 0.95) : 'rgba(232,228,216,'+baseA+')';
+          ctx.beginPath(); ctx.arc(s.x, s.y, rad, 0, Math.PI*2); ctx.fill();
+        }
+
+        // 4. Cursor crosshair (HUD-style)
+        ctx.strokeStyle = 'rgba(232,228,216,0.55)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(mx-10, my); ctx.lineTo(mx-3, my);
+        ctx.moveTo(mx+3, my);  ctx.lineTo(mx+10, my);
+        ctx.moveTo(mx, my-10); ctx.lineTo(mx, my-3);
+        ctx.moveTo(mx, my+3);  ctx.lineTo(mx, my+10);
+        ctx.stroke();
+        // gradient core
+        var cg = ctx.createRadialGradient(mx, my, 0, mx, my, 6);
+        cg.addColorStop(0, 'rgba(226,107,140,0.85)');
+        cg.addColorStop(1, 'rgba(226,107,140,0)');
+        ctx.fillStyle = cg;
+        ctx.beginPath(); ctx.arc(mx, my, 6, 0, Math.PI*2); ctx.fill();
+
+        // 5. Bursts (particles + ring)
+        for (var i=bursts.length-1;i>=0;i--){
+          var b = bursts[i];
+          b.t++;
+          if (b.ring){
+            var prog = b.t / b.life;
+            var rr = prog * 60;
+            var ra = (1 - prog) * 0.55;
+            ctx.strokeStyle = colorAt(b.h, ra);
+            ctx.lineWidth = 1.2;
+            ctx.beginPath(); ctx.arc(b.x, b.y, rr, 0, Math.PI*2); ctx.stroke();
+          } else {
+            b.x += b.vx; b.y += b.vy;
+            b.vx *= 0.96; b.vy *= 0.96;
+            var pa = 1 - b.t / b.life;
+            if (pa <= 0){ bursts.splice(i,1); continue; }
+            ctx.fillStyle = colorAt(b.h, pa*0.85);
+            ctx.beginPath(); ctx.arc(b.x, b.y, 1.6*pa+0.4, 0, Math.PI*2); ctx.fill();
+          }
+          if (b.t >= b.life) bursts.splice(i,1);
+        }
+        ctx.lineWidth = 1;
+
+        // Parallax tilt targets
+        var els = document.querySelectorAll('[data-mouse-tilt]');
+        for (var i=0;i<els.length;i++){
+          var el = els[i];
+          var r = el.getBoundingClientRect();
+          var cx = r.left + r.width/2, cy = r.top + r.height/2;
+          var dxn = (tx - cx) / window.innerWidth;
+          var dyn = (ty - cy) / window.innerHeight;
+          var max = parseFloat(el.dataset.mouseTilt) || 8;
+          el.style.transform = 'perspective(1000px) rotateY(' + (dxn*max) + 'deg) rotateX(' + (-dyn*max) + 'deg)';
+        }
+
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    })();
+  </script>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="nav.jsx"></script>
+  <script type="text/babel" src="home.jsx"></script>
+  <script type="text/babel" src="dashboard.jsx"></script>
+  <script type="text/babel" src="library.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+/* ============================================
+   AGENT MARKETPLACE · v2 · Quiet Editorial Tech
+   ============================================ */
+:root {
+  --bg: #09090B;
+  --surface: #0F0F11;
+  --surface-2: #15151A;
+  --line: rgba(244,242,238,0.07);
+  --line-strong: rgba(244,242,238,0.15);
+  --ink: #F4F2EE;
+  --ink-70: #A8A6A0;
+  --ink-40: #5C5A5F;
+  --ink-20: #2C2C32;
+  --live: #6FE3F0;
+  --warn: #E8C271;
+
+  --f-sans: "Space Grotesk", "Noto Sans SC", "PingFang SC", system-ui, sans-serif;
+  --f-zh: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --f-serif: "Instrument Serif", "Songti SC", "Source Han Serif SC", serif;
+  --f-mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-sans);
+  font-feature-settings: "ss01", "cv11";
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+#root { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+button { background: none; border: none; color: inherit; font: inherit; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+input, textarea { font: inherit; color: inherit; }
+
+/* Type utilities */
+.cap {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.cap.s { color: var(--ink-70); }
+.cap.l { color: var(--ink); }
+.serif { font-family: var(--f-serif); font-style: italic; font-weight: 400; }
+.zh { font-family: var(--f-zh); }
+.mono { font-family: var(--f-mono); }
+.dim { color: var(--ink-40); }
+
+/* Hairlines */
+.hr { height: 1px; background: var(--line); width: 100%; }
+
+/* Subtle grid backdrop */
+.grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(244,242,238,0.022) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(244,242,238,0.022) 1px, transparent 1px);
+  background-size: 96px 96px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 30%, transparent 95%);
+}
+
+/* Vignette */
+.vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 60%, transparent 30%, rgba(0,0,0,0.65) 100%);
+  pointer-events: none;
+}
+
+::selection { background: var(--ink); color: var(--bg); }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ink-20); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-40); }
+
+/* Live dot */
+.dot-live {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--live);
+  box-shadow: 0 0 8px var(--live);
+  animation: livePulse 2s ease-in-out infinite;
+}
+@keyframes livePulse { 50% { opacity: 0.45; } }
+
+/* Frame markers (corner ticks) */
+.tick { position: absolute; width: 12px; height: 12px; border-color: var(--line-strong); pointer-events: none; }
+.tick.tl { top: 18px; left: 18px; border-top: 1px solid; border-left: 1px solid; }
+.tick.tr { top: 18px; right: 18px; border-top: 1px solid; border-right: 1px solid; }
+.tick.bl { bottom: 18px; left: 18px; border-bottom: 1px solid; border-left: 1px solid; }
+.tick.br { bottom: 18px; right: 18px; border-bottom: 1px solid; border-right: 1px solid; }
+
+/* Reusable bevel-less surface */
+.surf {
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
