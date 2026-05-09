@@ -49,8 +49,9 @@ function Home() {
           <h1 className="zh h-zh">
             <span className="hz-first">你</span>
             {'认为这个世界是数字化的吗'.split('').map((c, i) => (
-              <span key={i} className="hz-char" style={{animationDelay: (0.69 + i * 0.11) + 's'}}>{c}</span>
+              <span key={i} className="hz-char" style={{animationDelay: (0.65 + i * 0.08) + 's'}}>{c}</span>
             ))}
+            <span className="hz-cursor" />
           </h1>
           <span className="serif h-serif">is the world we live in,&nbsp;digital?</span>
         </div>
@@ -391,22 +392,69 @@ const homeCss = `
   will-change: transform, opacity;
 }
 .hz-first {
-  transform: translateY(-60vh);
-  animation: hzDrop 0.6s cubic-bezier(.7,0,.3,1) forwards;
+  position: relative;
+  transform: translateY(-72vh) scale(1.06);
+  animation:
+    hzDropFall 0.45s cubic-bezier(.6,0,.9,.05) forwards,
+    hzDropSettle 0.22s 0.45s cubic-bezier(.4,0,.4,1) forwards;
 }
-@keyframes hzDrop {
-  to { transform: translateY(0); }
+@keyframes hzDropFall {
+  0%   { transform: translateY(-72vh) scale(1.06); }
+  100% { transform: translateY(0) scale(1); }
+}
+@keyframes hzDropSettle {
+  0%   { transform: translateY(0) scale(1); }
+  35%  { transform: translateY(3px) scale(1); }
+  65%  { transform: translateY(-1.5px) scale(1); }
+  100% { transform: translateY(0) scale(1); }
+}
+.hz-first::after {
+  content: "";
+  position: absolute;
+  left: 50%; bottom: 0;
+  transform: translateX(-50%) scaleX(0);
+  width: 200px; height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(232,228,216,0.95) 35%,
+    rgba(226,107,140,0.95) 50%,
+    rgba(232,228,216,0.95) 65%,
+    transparent);
+  opacity: 0;
+  pointer-events: none;
+  animation: hzShock 0.65s 0.46s cubic-bezier(.2,.8,.2,1) forwards;
+}
+@keyframes hzShock {
+  0%   { transform: translateX(-50%) scaleX(0); opacity: 0; }
+  18%  { opacity: 1; }
+  100% { transform: translateX(-50%) scaleX(1.6); opacity: 0; }
 }
 .hz-char {
   opacity: 0;
-  transform: translateX(2px);
-  animation: hzType 0.22s cubic-bezier(.4,0,.2,1) forwards;
-}
-@keyframes hzType {
-  to { opacity: 1; transform: translateX(0); }
+  animation: hzReveal 0.04s linear forwards;
 }
 @keyframes hzReveal {
   to { opacity: 1; }
+}
+.hz-cursor {
+  display: inline-block;
+  width: 1px;
+  height: 0.85em;
+  margin-left: 0.06em;
+  vertical-align: text-bottom;
+  background: var(--ink);
+  opacity: 0;
+  animation:
+    hzCursorBlink 1s 0.65s steps(2, jump-none) infinite,
+    hzCursorOut 0.25s 1.85s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes hzCursorBlink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes hzCursorOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
 }
 .h-serif {
   font-size: 18px;
@@ -424,14 +472,22 @@ const homeCss = `
   max-width: 440px;
   margin-top: 4px;
   opacity: 0;
-  animation: hzReveal 0.7s 2.30s cubic-bezier(.4,0,.2,1) forwards;
+  animation: hzReveal 0.7s 2.20s cubic-bezier(.4,0,.2,1) forwards;
 }
 
 .h-cta-row {
   display: flex; gap: 12px;
   margin-top: 8px;
   opacity: 0;
-  animation: hzReveal 0.7s 2.60s cubic-bezier(.4,0,.2,1) forwards;
+  animation: hzReveal 0.7s 2.50s cubic-bezier(.4,0,.2,1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hz-first, .hz-char, .hz-cursor, .h-serif, .h-sub, .h-cta-row {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hz-first::after, .hz-cursor { display: none !important; }
 }
 .cta-primary {
   display: flex; gap: 14px; align-items: center;
