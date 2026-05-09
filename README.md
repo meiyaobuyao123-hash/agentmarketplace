@@ -37,6 +37,7 @@ AgentMarketplace 收录三类作品（统称 **package**）：
 | [06 前端方案](docs/06-frontend.md) | Next.js + 钱包 + 关键页面 |
 | [07 部署](docs/07-deployment.md) | systemd + nginx 单机部署 |
 | [08 路线图](docs/08-roadmap.md) | v0.1 → v1.0 |
+| [09 定时任务](docs/09-scheduled-jobs.md) | systemd timer + arq cron 任务清单 |
 | [v0.1 Spec](docs/v0.1-spec.md) | v0.1 详细规格（B1-B6） |
 
 ---

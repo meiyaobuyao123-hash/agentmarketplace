@@ -282,6 +282,8 @@ PLATFORM_TREASURY=0x...
 
 ## 10. 备份
 
+> 完整定时任务清单见 [09-scheduled-jobs.md](09-scheduled-jobs.md)。本节只列备份。
+
 每天凌晨 3 点：
 
 ```bash
