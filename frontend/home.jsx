@@ -46,8 +46,13 @@ function Home() {
         <WireSphere />
 
         <div className="h-headline">
-          <h1 className="zh h-zh">万象</h1>
-          <span className="serif h-serif">a quiet workshop of one&nbsp;thousand&nbsp;hands</span>
+          <h1 className="zh h-zh">
+            <span className="hz-first">你</span>
+            {'认为这个世界是数字化的吗'.split('').map((c, i) => (
+              <span key={i} className="hz-char" style={{animationDelay: (0.69 + i * 0.11) + 's'}}>{c}</span>
+            ))}
+          </h1>
+          <span className="serif h-serif">is the world we live in,&nbsp;digital?</span>
         </div>
 
         <p className="zh h-sub">
@@ -373,17 +378,42 @@ const homeCss = `
   margin-top: 4px;
 }
 .h-zh {
-  font-size: 72px;
+  font-size: clamp(34px, 4.4vw, 60px);
   font-weight: 200;
-  letter-spacing: 0.18em;
-  padding-left: 0.18em;
-  line-height: 0.95;
+  letter-spacing: 0.04em;
+  padding-left: 0.04em;
+  line-height: 1;
   color: var(--ink);
+  white-space: nowrap;
+}
+.h-zh > span {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+.hz-first {
+  transform: translateY(-60vh);
+  animation: hzDrop 0.6s cubic-bezier(.7,0,.3,1) forwards;
+}
+@keyframes hzDrop {
+  to { transform: translateY(0); }
+}
+.hz-char {
+  opacity: 0;
+  transform: translateX(2px);
+  animation: hzType 0.22s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes hzType {
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes hzReveal {
+  to { opacity: 1; }
 }
 .h-serif {
   font-size: 18px;
   color: var(--ink-70);
   line-height: 1.2;
+  opacity: 0;
+  animation: hzReveal 0.7s 1.95s cubic-bezier(.4,0,.2,1) forwards;
 }
 
 .h-sub {
@@ -393,11 +423,15 @@ const homeCss = `
   letter-spacing: 0.03em;
   max-width: 440px;
   margin-top: 4px;
+  opacity: 0;
+  animation: hzReveal 0.7s 2.30s cubic-bezier(.4,0,.2,1) forwards;
 }
 
 .h-cta-row {
   display: flex; gap: 12px;
   margin-top: 8px;
+  opacity: 0;
+  animation: hzReveal 0.7s 2.60s cubic-bezier(.4,0,.2,1) forwards;
 }
 .cta-primary {
   display: flex; gap: 14px; align-items: center;
