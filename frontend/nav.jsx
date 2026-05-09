@@ -13,7 +13,7 @@ function Nav({ tab, onTransition }) {
       <div className="n-brand">
         <div className="n-mark"><div className="n-mark-i" /></div>
         <div className="n-brand-text">
-          <div className="zh n-brand-zh">万象</div>
+          <div className="n-brand-zh">AI Time</div>
           <div className="cap n-brand-en">Marketplace · v2.6</div>
         </div>
       </div>
