@@ -44,8 +44,9 @@ AgentMarketplace 收录三类作品（统称 **package**）：
 
 ## 状态
 
-- 阶段：**方案文档（pre-v0.1）**
-- 当前产物：完整一版项目方案，待 v0.1 启动开发
+- 阶段：**方案文档（pre-v0.1）+ 设计稿原型已上线**
+- 当前产物：完整一版项目方案 + Claude Design 出品的前端原型已部署
+- **设计稿在线地址**：<https://www.ai100trading.cn/agentmarketplace/>
 - 下一步：按 [v0.1-spec.md](docs/v0.1-spec.md) 的 B1 开始建仓库骨架
 
 ---
