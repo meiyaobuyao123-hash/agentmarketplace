@@ -132,9 +132,89 @@ function Dashboard() {
         <Card title="全球节点" en="Global · nodes" cls="span-3">
           <NetworkMap tick={tick} />
         </Card>
+
+        <Card
+          title="全球大模型观测台"
+          en={"Global LLM observatory · monthly · " + (typeof window !== "undefined" && window.GLOBAL_STATS ? window.GLOBAL_STATS.meta.updated_at : "—")}
+          cls="span-6">
+          <Observatory />
+        </Card>
       </div>
 
       <style>{dashCss}</style>
+    </div>
+  );
+}
+
+function Observatory() {
+  const data = (typeof window !== "undefined") ? window.GLOBAL_STATS : null;
+  if (!data) {
+    return <div className="cap dim">data/global-stats.js 未加载，请检查 index.html</div>;
+  }
+  return (
+    <div className="obs">
+      <div className="obs-meta">
+        <span className="cap">UPDATED · {data.meta.updated_at}</span>
+        <span className="cap dim">· next due {data.meta.next_update_due}</span>
+        <span className="cap dim">· {data.meta.note}</span>
+      </div>
+      <div className="obs-cols">
+        <div className="obs-col">
+          <div className="obs-col-head">
+            <span className="cap">A · countries by AI usage (proxy)</span>
+            <span className="zh obs-h">Token 消耗 · 国家 Top 10</span>
+          </div>
+          <div className="obs-list">
+            {data.countries.map(c => (
+              <div key={c.rank} className="obs-row obs-row-country">
+                <span className="cap obs-rk">{String(c.rank).padStart(2,"0")}</span>
+                <span className="cap obs-flag">{c.code}</span>
+                <div className="obs-name-block">
+                  <div className="obs-line-1">
+                    <span className="zh obs-name">{c.cn}</span>
+                    <span className="cap dim obs-en">/ {c.en}</span>
+                  </div>
+                  <div className="obs-line-2 cap dim">{c.metric}</div>
+                </div>
+                <div className="obs-metric-block">
+                  <span className="cap obs-mau">{c.value}</span>
+                  <span className="obs-trend">{c.trend}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="obs-col">
+          <div className="obs-col-head">
+            <span className="cap">B · models by MAU · ARR · valuation</span>
+            <span className="zh obs-h">大模型 Top 10</span>
+          </div>
+          <div className="obs-list">
+            {data.models.map(m => (
+              <div key={m.rank} className="obs-row obs-row-model">
+                <span className="cap obs-rk">{String(m.rank).padStart(2,"0")}</span>
+                <span className="obs-country">{m.country}</span>
+                <div className="obs-name-block">
+                  <div className="obs-line-1">
+                    <span className="zh obs-name">{m.product}</span>
+                    <span className="cap dim obs-co">/ {m.company}</span>
+                  </div>
+                  <div className="obs-line-2 cap dim">{m.note}</div>
+                </div>
+                <div className="obs-metric-block">
+                  <span className="cap obs-mau">MAU {m.mau}{m.aux ? " · " + m.aux : ""}</span>
+                  <span className="cap obs-arr">ARR {m.arr}</span>
+                  <span className="cap obs-valuation">VAL {m.valuation}</span>
+                  <span className="cap dim obs-asof">as of {m.asof}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="obs-foot cap dim">
+        sources · {data.sources.map(s => s.name).join(" · ")}
+      </div>
     </div>
   );
 }
@@ -294,6 +374,7 @@ const dashCss = `
 .card:hover { background: rgba(244,242,238,0.015); }
 .span-2 { grid-column: span 2; }
 .span-3 { grid-column: span 3; }
+.span-6 { grid-column: span 6; }
 .row-2 { grid-row: span 2; }
 
 .c-head { display: flex; justify-content: space-between; align-items: center; }
@@ -357,6 +438,42 @@ const dashCss = `
 
 /* Network */
 .netmap { width: 100%; height: 100%; min-height: 240px; }
+
+/* Observatory */
+.obs { display: flex; flex-direction: column; gap: 14px; }
+.obs-meta { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.obs-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.obs-col { padding: 6px 22px 6px 0; border-right: 1px solid var(--line); }
+.obs-col + .obs-col { padding: 6px 0 6px 22px; border-right: none; }
+.obs-col-head { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+.obs-col-head .obs-h { font-size: 16px; font-weight: 500; letter-spacing: 0.04em; }
+.obs-list { display: flex; flex-direction: column; gap: 0; }
+.obs-row {
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: center;
+  display: grid;
+}
+.obs-row:last-child { border-bottom: none; }
+.obs-row-country { grid-template-columns: 26px 28px 1fr auto; }
+.obs-row-model   { grid-template-columns: 26px 22px 1fr auto; }
+.obs-rk { font-size: 10px; color: var(--ink-40); font-variant-numeric: tabular-nums; }
+.obs-flag { font-size: 10px; color: var(--ink-70); letter-spacing: 0.16em; }
+.obs-country { font-size: 16px; line-height: 1; }
+.obs-name-block { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.obs-line-1 { display: flex; gap: 8px; align-items: baseline; }
+.obs-name { font-size: 13px; font-weight: 500; letter-spacing: 0.02em; }
+.obs-en, .obs-co { font-size: 9px; }
+.obs-line-2 { font-size: 9px; line-height: 1.4; }
+.obs-metric-block { display: flex; flex-direction: column; gap: 3px; align-items: flex-end; text-align: right; }
+.obs-metric-block > span { font-size: 10px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.obs-mau { color: var(--ink); font-weight: 500; }
+.obs-arr { color: var(--ink-70); }
+.obs-valuation { color: var(--ink-70); }
+.obs-asof { font-size: 9px !important; }
+.obs-trend { font-size: 14px; line-height: 1; color: var(--ink-70); }
+.obs-foot { font-size: 9px; line-height: 1.6; padding-top: 10px; border-top: 1px solid var(--line); }
 `;
 
 window.Dashboard = Dashboard;
