@@ -153,67 +153,87 @@ function Observatory() {
   }
   return (
     <div className="obs">
+      {/* Methodology header — 数据口径 + 更新时间一目了然 */}
       <div className="obs-meta">
-        <span className="cap">UPDATED · {data.meta.updated_at}</span>
-        <span className="cap dim">· next due {data.meta.next_update_due}</span>
-        <span className="cap dim">· {data.meta.note}</span>
+        <div className="obs-meta-l">
+          <span className="cap obs-meta-tag">UPDATED · {data.meta.updated_at}</span>
+          <span className="cap dim">next due · {data.meta.next_update_due}</span>
+        </div>
+        <div className="obs-meta-r">
+          <span className="cap dim">{data.meta.methodology}</span>
+        </div>
       </div>
+
       <div className="obs-cols">
+        {/* 左：国家 */}
         <div className="obs-col">
           <div className="obs-col-head">
-            <span className="cap">A · countries by AI usage (proxy)</span>
+            <span className="cap">A · countries by AI usage</span>
             <span className="zh obs-h">Token 消耗 · 国家 Top 10</span>
           </div>
           <div className="obs-list">
             {data.countries.map(c => (
               <div key={c.rank} className="obs-row obs-row-country">
                 <span className="cap obs-rk">{String(c.rank).padStart(2,"0")}</span>
-                <span className="cap obs-flag">{c.code}</span>
-                <div className="obs-name-block">
-                  <div className="obs-line-1">
+                <span className="cap obs-cflag">{c.code}</span>
+                <div className="obs-cbody">
+                  <div className="obs-cline-1">
                     <span className="zh obs-name">{c.cn}</span>
                     <span className="cap dim obs-en">/ {c.en}</span>
+                    <span className="obs-trend">{c.trend}</span>
                   </div>
-                  <div className="obs-line-2 cap dim">{c.metric}</div>
-                </div>
-                <div className="obs-metric-block">
-                  <span className="cap obs-mau">{c.value}</span>
-                  <span className="obs-trend">{c.trend}</span>
+                  <div className="obs-cline-2">
+                    <span className="cap obs-c-label">{c.metric_label}</span>
+                    <span className="obs-c-value">{c.value}</span>
+                    <span className="cap dim obs-c-when">as of {c.asof}</span>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
+
+        {/* 右：模型 */}
         <div className="obs-col">
           <div className="obs-col-head">
-            <span className="cap">B · models by MAU · ARR · valuation</span>
+            <span className="cap">B · models · MAU · ARR · valuation</span>
             <span className="zh obs-h">大模型 Top 10</span>
           </div>
           <div className="obs-list">
             {data.models.map(m => (
               <div key={m.rank} className="obs-row obs-row-model">
                 <span className="cap obs-rk">{String(m.rank).padStart(2,"0")}</span>
-                <span className="obs-country">{m.country}</span>
-                <div className="obs-name-block">
-                  <div className="obs-line-1">
+                <span className="obs-flag">{m.country}</span>
+                <div className="obs-mname-block">
+                  <div className="obs-mname-l1">
                     <span className="zh obs-name">{m.product}</span>
                     <span className="cap dim obs-co">/ {m.company}</span>
                   </div>
-                  <div className="obs-line-2 cap dim">{m.note}</div>
+                  <div className="obs-mnote cap dim">{m.note}</div>
                 </div>
-                <div className="obs-metric-block">
-                  <span className="cap obs-mau">MAU {m.mau}{m.aux ? " · " + m.aux : ""}</span>
-                  <span className="cap obs-arr">ARR {m.arr}</span>
-                  <span className="cap obs-valuation">VAL {m.valuation}</span>
-                  <span className="cap dim obs-asof">as of {m.asof}</span>
+                <div className="obs-stats">
+                  {m.stats.map((s, i) => (
+                    <div key={i} className="obs-stat">
+                      <span className="cap obs-stat-label">{s.label}</span>
+                      <span className="obs-stat-value">{s.value}</span>
+                      <span className="cap obs-stat-when">{s.asof}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
-      <div className="obs-foot cap dim">
-        sources · {data.sources.map(s => s.name).join(" · ")}
+
+      {/* 数据来源脚注 */}
+      <div className="obs-foot">
+        <div className="cap obs-foot-h">SOURCES</div>
+        <div className="obs-foot-list">
+          {data.sources.map((s, i) => (
+            <a key={i} href={s.url} target="_blank" rel="noopener" className="cap obs-foot-link">{s.name}</a>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -439,41 +459,150 @@ const dashCss = `
 /* Network */
 .netmap { width: 100%; height: 100%; min-height: 240px; }
 
-/* Observatory */
-.obs { display: flex; flex-direction: column; gap: 14px; }
-.obs-meta { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+/* Observatory · 月度大模型观测台 */
+.obs { display: flex; flex-direction: column; gap: 18px; }
+
+/* Methodology header */
+.obs-meta {
+  display: flex; justify-content: space-between; gap: 18px;
+  flex-wrap: wrap;
+  padding: 10px 0 12px;
+  border-bottom: 1px solid var(--line);
+}
+.obs-meta-l { display: flex; gap: 14px; align-items: baseline; }
+.obs-meta-r { color: var(--ink-40); font-size: 9px; }
+.obs-meta-tag { color: var(--ink); }
+
+/* Two columns */
 .obs-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
-.obs-col { padding: 6px 22px 6px 0; border-right: 1px solid var(--line); }
-.obs-col + .obs-col { padding: 6px 0 6px 22px; border-right: none; }
-.obs-col-head { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
-.obs-col-head .obs-h { font-size: 16px; font-weight: 500; letter-spacing: 0.04em; }
-.obs-list { display: flex; flex-direction: column; gap: 0; }
-.obs-row {
+.obs-col { min-width: 0; }
+.obs-col:first-child { padding-right: 22px; border-right: 1px solid var(--line); }
+.obs-col + .obs-col { padding-left: 22px; }
+
+.obs-col-head {
+  display: flex; flex-direction: column; gap: 6px;
+  padding-bottom: 12px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.obs-col-head .obs-h { font-size: 14px; font-weight: 500; letter-spacing: 0.04em; }
+
+.obs-list { display: flex; flex-direction: column; }
+
+/* ── Country row ────────────────────── */
+.obs-row-country {
+  display: grid;
+  grid-template-columns: 26px 32px 1fr;
   gap: 12px;
-  padding: 10px 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+.obs-row-country:last-child { border-bottom: none; }
+.obs-cflag {
+  font-size: 9px;
+  color: var(--ink-70);
+  letter-spacing: 0.18em;
+  font-weight: 500;
+}
+.obs-cbody { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.obs-cline-1 { display: flex; gap: 8px; align-items: baseline; }
+.obs-cline-2 {
+  display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  line-height: 1.4;
+}
+.obs-c-label { color: var(--ink-40); }
+.obs-c-value {
+  color: var(--ink); font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-family: var(--f-sans);
+  font-size: 12px;
+}
+.obs-c-when { font-size: 9px !important; color: var(--ink-40) !important; }
+
+/* ── Model row · horizontal layout ───── */
+.obs-row-model {
+  display: grid;
+  grid-template-columns: 26px 22px minmax(140px, 1.2fr) minmax(220px, 1.4fr);
+  gap: 14px;
+  padding: 12px 0;
   border-bottom: 1px solid var(--line);
   align-items: center;
-  display: grid;
 }
-.obs-row:last-child { border-bottom: none; }
-.obs-row-country { grid-template-columns: 26px 28px 1fr auto; }
-.obs-row-model   { grid-template-columns: 26px 22px 1fr auto; }
+.obs-row-model:last-child { border-bottom: none; }
+.obs-flag { font-size: 16px; line-height: 1; }
+.obs-mname-block { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.obs-mname-l1 { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.obs-mnote { font-size: 9px; line-height: 1.5; color: var(--ink-40); }
+
+.obs-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+.obs-stat {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 0 10px;
+  border-left: 1px solid var(--line);
+}
+.obs-stat:first-child { padding-left: 0; border-left: none; }
+.obs-stat:last-child  { padding-right: 0; }
+.obs-stat-label {
+  font-size: 9px;
+  color: var(--ink-40);
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.obs-stat-value {
+  font-family: var(--f-sans);
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.obs-stat-when {
+  font-size: 9px !important;
+  color: var(--ink-40);
+  white-space: nowrap;
+}
+
+/* Common */
 .obs-rk { font-size: 10px; color: var(--ink-40); font-variant-numeric: tabular-nums; }
-.obs-flag { font-size: 10px; color: var(--ink-70); letter-spacing: 0.16em; }
-.obs-country { font-size: 16px; line-height: 1; }
-.obs-name-block { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.obs-line-1 { display: flex; gap: 8px; align-items: baseline; }
-.obs-name { font-size: 13px; font-weight: 500; letter-spacing: 0.02em; }
-.obs-en, .obs-co { font-size: 9px; }
-.obs-line-2 { font-size: 9px; line-height: 1.4; }
-.obs-metric-block { display: flex; flex-direction: column; gap: 3px; align-items: flex-end; text-align: right; }
-.obs-metric-block > span { font-size: 10px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.obs-mau { color: var(--ink); font-weight: 500; }
-.obs-arr { color: var(--ink-70); }
-.obs-valuation { color: var(--ink-70); }
-.obs-asof { font-size: 9px !important; }
-.obs-trend { font-size: 14px; line-height: 1; color: var(--ink-70); }
-.obs-foot { font-size: 9px; line-height: 1.6; padding-top: 10px; border-top: 1px solid var(--line); }
+.obs-name { font-size: 14px; font-weight: 500; letter-spacing: 0.04em; }
+.obs-en, .obs-co { font-size: 9px; letter-spacing: 0.04em; }
+.obs-trend { font-size: 14px; color: var(--ink-70); margin-left: auto; line-height: 1; }
+
+/* Footer · sources */
+.obs-foot {
+  display: flex; flex-direction: column; gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.obs-foot-h {
+  letter-spacing: 0.32em;
+  color: var(--ink-40);
+}
+.obs-foot-list { display: flex; flex-wrap: wrap; gap: 14px; }
+.obs-foot-link {
+  color: var(--ink-70);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s;
+  font-size: 9px;
+}
+.obs-foot-link:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-70);
+}
 `;
 
 window.Dashboard = Dashboard;
