@@ -28,11 +28,12 @@ out/
 *.key
 secrets/
 
-# DB / 本地数据
+# DB / 本地数据（不要排除 frontend/data — 那是源代码）
 *.sqlite
 *.sqlite3
 *.db
-data/
+/data/
+api/data/
 uploads/
 
 # IDE / OS
