@@ -23,7 +23,6 @@ function Nav({ tab, onTransition }) {
           <button key={t.id} className={"n-tab " + (tab===t.id?"on":"")} onClick={() => onTransition(t.id)}>
             <span className="cap n-tab-num">0{i+1}</span>
             <span className="zh n-tab-cn">{t.cn}</span>
-            <span className="cap n-tab-en">{t.en}</span>
             {tab===t.id && <span className="n-tab-mark" />}
           </button>
         ))}

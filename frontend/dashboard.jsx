@@ -57,7 +57,6 @@ function Dashboard() {
           </div>
           <h1 className="d-title">
             <span className="zh d-zh">看板</span>
-            <span className="serif d-serif">— a quiet console</span>
           </h1>
         </div>
         <div className="d-head-r">
@@ -179,7 +178,6 @@ function Observatory() {
                 <div className="obs-cbody">
                   <div className="obs-cline-1">
                     <span className="zh obs-name">{c.cn}</span>
-                    <span className="cap dim obs-en">/ {c.en}</span>
                     <span className="obs-trend">{c.trend}</span>
                   </div>
                   <div className="obs-cline-2">

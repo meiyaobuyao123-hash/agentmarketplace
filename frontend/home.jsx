@@ -53,7 +53,6 @@ function Home() {
             ))}
             <span className="hz-cursor" />
           </h1>
-          <span className="serif h-serif">is the world we live in,&nbsp;digital?</span>
         </div>
 
         <p className="zh h-sub">
