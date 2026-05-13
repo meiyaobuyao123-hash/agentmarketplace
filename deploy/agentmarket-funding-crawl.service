@@ -1,0 +1,28 @@
+[Unit]
+Description=AgentMarketplace funding crawler (one-shot)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/agentmarket/scripts
+Environment=PYTHONUNBUFFERED=1
+# 写到 webroot 需要 sudo 权限。webroot 文件 owner=www-data，
+# 通过 sudo 调用，写入临时位置后用 install 移动到 webroot。
+ExecStart=/opt/agentmarket/venv/bin/python /opt/agentmarket/scripts/crawl_funding.py \
+    --output /tmp/agentmarket-funding-new.json \
+    --merge-from /var/www/agentmarketplace/data/funding.json \
+    --backup-dir /var/lib/agentmarket/funding-backups
+# install 步骤把临时文件移到 webroot 并设权限
+ExecStartPost=/bin/sh -c '\
+    if [ -f /tmp/agentmarket-funding-new.json ]; then \
+        sudo install -o www-data -g www-data -m 644 /tmp/agentmarket-funding-new.json /var/www/agentmarketplace/data/funding.json && \
+        rm -f /tmp/agentmarket-funding-new.json; \
+    fi'
+# 失败不阻塞 timer 下一次
+SuccessExitStatus=0 2
+StandardOutput=journal
+StandardError=journal
+TimeoutStartSec=180s

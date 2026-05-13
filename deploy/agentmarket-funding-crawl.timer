@@ -1,0 +1,13 @@
+[Unit]
+Description=Trigger AgentMarketplace funding crawl every ~10 days
+
+[Timer]
+# 每月 1 / 11 / 21 日凌晨 3:00 跑（≈ 每 10 天一次）
+OnCalendar=*-*-1,11,21 03:00:00
+# 错过的会补跑（机器关机过则下次启动补）
+Persistent=true
+# 随机延迟 15 分钟避免与其他 timer 同时启动
+RandomizedDelaySec=15min
+
+[Install]
+WantedBy=timers.target
